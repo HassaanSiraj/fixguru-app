@@ -67,15 +67,37 @@ export default function CreateJob() {
         formDataToSend.append('images[]', image);
       });
 
-      const response = await api.post('/jobs', formDataToSend, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
+      console.log('Sending job creation request...', {
+        url: `${api.defaults.baseURL}/jobs`,
+        hasImages: formData.images.length > 0,
+        formData: {
+          title: formData.title,
+          category_id: formData.category_id,
+          location: formData.location,
+          budget: formData.budget,
+        }
       });
 
+      // Log FormData contents for debugging
+      for (let pair of formDataToSend.entries()) {
+        console.log('FormData:', pair[0], pair[1]);
+      }
+
+      const response = await api.post('/jobs', formDataToSend);
+
+      console.log('Job created successfully:', response.data);
       navigate(`/jobs/${response.data.id}`);
     } catch (err) {
-      setError(err.response?.data?.errors?.join(', ') || 'Failed to create job');
+      console.error('Error creating job:', err);
+      console.error('Error response:', err.response);
+      const errorMessage = err.response?.data?.errors 
+        ? (Array.isArray(err.response.data.errors) 
+            ? err.response.data.errors.join(', ') 
+            : err.response.data.errors)
+        : err.response?.data?.error 
+        ? err.response.data.error
+        : err.message || 'Failed to create job. Please check your connection and try again.';
+      setError(errorMessage);
     } finally {
       setLoading(false);
     }
