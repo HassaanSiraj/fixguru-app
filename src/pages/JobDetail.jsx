@@ -25,6 +25,8 @@ export default function JobDetail() {
   const fetchJob = async () => {
     try {
       const response = await api.get(`/jobs/${id}`);
+      console.log('Job data:', response.data);
+      console.log('Job images:', response.data.images);
       setJob(response.data);
       setBids(response.data.bids || []);
     } catch (error) {
@@ -120,6 +122,28 @@ export default function JobDetail() {
           <h2 className="text-sm font-medium text-gray-700 mb-1">Description</h2>
           <p className="text-gray-900 whitespace-pre-wrap">{job.description}</p>
         </div>
+
+        {job.images && job.images.length > 0 && (
+          <div className="mb-4">
+            <h2 className="text-sm font-medium text-gray-700 mb-3">Images</h2>
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+              {job.images.map((imageUrl, index) => (
+                <div key={index} className="relative group">
+                  <img
+                    src={imageUrl}
+                    alt={`Job image ${index + 1}`}
+                    className="w-full h-48 object-cover rounded-lg border border-gray-200 hover:shadow-lg transition-shadow cursor-pointer"
+                    onError={(e) => {
+                      console.error('Error loading image:', imageUrl);
+                      e.target.style.display = 'none';
+                    }}
+                    onClick={() => window.open(imageUrl, '_blank')}
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
 
       {canBid && (

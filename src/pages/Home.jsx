@@ -193,6 +193,19 @@ export default function Home() {
                   to={`/jobs/${job.id}`}
                   className="card p-6 hover:shadow-xl transition-all duration-200 transform hover:-translate-y-1"
                 >
+                  {job.images && job.images.length > 0 && (
+                    <div className="mb-4 -mx-6 -mt-6">
+                      <img
+                        src={job.images[0]}
+                        alt={job.title}
+                        className="w-full h-48 object-cover rounded-t-xl"
+                        onError={(e) => {
+                          e.target.style.display = 'none';
+                        }}
+                      />
+                    </div>
+                  )}
+                  
                   <div className="flex items-start justify-between mb-3">
                     <div className="flex-1">
                       <h3 className="text-lg font-bold text-gray-900 mb-1 line-clamp-2">
