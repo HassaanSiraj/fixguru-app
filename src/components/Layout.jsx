@@ -1,110 +1,189 @@
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { 
   HomeIcon, 
   BriefcaseIcon, 
   UserIcon, 
   ArrowRightOnRectangleIcon,
-  Cog6ToothIcon
+  Cog6ToothIcon,
+  Bars3Icon,
+  XMarkIcon
 } from '@heroicons/react/24/outline';
+import { useState } from 'react';
 
 export default function Layout({ children }) {
   const { user, logout, isAdmin, isProvider, isSeeker } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const handleLogout = () => {
     logout();
     navigate('/login');
   };
 
+  const isActive = (path) => location.pathname === path;
+
   return (
     <div className="min-h-screen bg-gray-50">
-      <nav className="bg-white shadow-sm border-b">
+      <nav className="bg-white shadow-md border-b border-gray-200 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16">
-            <div className="flex">
-              <Link to="/" className="flex items-center">
-                <span className="text-2xl font-bold text-blue-600">FixGuru</span>
+            <div className="flex items-center">
+              <Link to="/" className="flex items-center space-x-2">
+                <div className="bg-gradient-to-br from-blue-600 to-indigo-600 p-2 rounded-lg">
+                  <BriefcaseIcon className="h-6 w-6 text-white" />
+                </div>
+                <span className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+                  FixGuru
+                </span>
               </Link>
-              <div className="hidden sm:ml-6 sm:flex sm:space-x-8">
+              <div className="hidden md:ml-10 md:flex md:space-x-1">
                 <Link
                   to="/"
-                  className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-900 hover:text-blue-600"
+                  className={`inline-flex items-center px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                    isActive('/') 
+                      ? 'bg-blue-50 text-blue-700' 
+                      : 'text-gray-700 hover:bg-gray-50'
+                  }`}
                 >
-                  <HomeIcon className="h-5 w-5 mr-1" />
+                  <HomeIcon className="h-5 w-5 mr-2" />
                   Home
                 </Link>
                 {isSeeker && (
                   <Link
                     to="/jobs"
-                    className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-500 hover:text-gray-700"
+                    className={`inline-flex items-center px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                      isActive('/jobs') 
+                        ? 'bg-blue-50 text-blue-700' 
+                        : 'text-gray-700 hover:bg-gray-50'
+                    }`}
                   >
-                    <BriefcaseIcon className="h-5 w-5 mr-1" />
+                    <BriefcaseIcon className="h-5 w-5 mr-2" />
                     My Jobs
                   </Link>
                 )}
                 {isProvider && (
                   <Link
                     to="/bids"
-                    className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-500 hover:text-gray-700"
+                    className={`inline-flex items-center px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                      isActive('/bids') 
+                        ? 'bg-blue-50 text-blue-700' 
+                        : 'text-gray-700 hover:bg-gray-50'
+                    }`}
                   >
-                    <BriefcaseIcon className="h-5 w-5 mr-1" />
+                    <BriefcaseIcon className="h-5 w-5 mr-2" />
                     My Bids
                   </Link>
                 )}
                 {isAdmin && (
                   <Link
                     to="/admin"
-                    className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-500 hover:text-gray-700"
+                    className={`inline-flex items-center px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                      isActive('/admin') 
+                        ? 'bg-blue-50 text-blue-700' 
+                        : 'text-gray-700 hover:bg-gray-50'
+                    }`}
                   >
-                    <Cog6ToothIcon className="h-5 w-5 mr-1" />
+                    <Cog6ToothIcon className="h-5 w-5 mr-2" />
                     Admin
                   </Link>
                 )}
               </div>
             </div>
-            <div className="flex items-center">
+            <div className="flex items-center space-x-4">
               {user ? (
-                <div className="flex items-center space-x-4">
+                <>
                   <Link
                     to="/profile"
-                    className="inline-flex items-center text-sm font-medium text-gray-700 hover:text-gray-900"
+                    className="hidden sm:inline-flex items-center px-4 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
                   >
-                    <UserIcon className="h-5 w-5 mr-1" />
-                    {user.email}
+                    <UserIcon className="h-5 w-5 mr-2" />
+                    <span className="hidden lg:inline">{user.email}</span>
                   </Link>
                   <button
                     onClick={handleLogout}
-                    className="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-red-600 hover:bg-red-700"
+                    className="inline-flex items-center px-4 py-2 rounded-lg text-sm font-medium text-white bg-red-600 hover:bg-red-700 transition-colors shadow-sm"
                   >
-                    <ArrowRightOnRectangleIcon className="h-5 w-5 mr-1" />
-                    Logout
+                    <ArrowRightOnRectangleIcon className="h-5 w-5 mr-2" />
+                    <span className="hidden sm:inline">Logout</span>
                   </button>
-                </div>
+                </>
               ) : (
-                <div className="flex items-center space-x-4">
+                <div className="flex items-center space-x-3">
                   <Link
                     to="/login"
-                    className="text-sm font-medium text-gray-700 hover:text-gray-900"
+                    className="px-4 py-2 rounded-lg text-sm font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50 transition-colors"
                   >
                     Login
                   </Link>
                   <Link
                     to="/register"
-                    className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700"
+                    className="px-4 py-2 rounded-lg text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 transition-colors shadow-sm"
                   >
                     Sign Up
                   </Link>
                 </div>
               )}
+              <button
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                className="md:hidden p-2 rounded-lg text-gray-700 hover:bg-gray-100"
+              >
+                {mobileMenuOpen ? (
+                  <XMarkIcon className="h-6 w-6" />
+                ) : (
+                  <Bars3Icon className="h-6 w-6" />
+                )}
+              </button>
             </div>
           </div>
         </div>
+        
+        {/* Mobile menu */}
+        {mobileMenuOpen && (
+          <div className="md:hidden border-t border-gray-200 bg-white">
+            <div className="px-2 pt-2 pb-3 space-y-1">
+              <Link
+                to="/"
+                className="block px-3 py-2 rounded-lg text-base font-medium text-gray-700 hover:bg-gray-50"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Home
+              </Link>
+              {isSeeker && (
+                <Link
+                  to="/jobs"
+                  className="block px-3 py-2 rounded-lg text-base font-medium text-gray-700 hover:bg-gray-50"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  My Jobs
+                </Link>
+              )}
+              {isProvider && (
+                <Link
+                  to="/bids"
+                  className="block px-3 py-2 rounded-lg text-base font-medium text-gray-700 hover:bg-gray-50"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  My Bids
+                </Link>
+              )}
+              {user && (
+                <Link
+                  to="/profile"
+                  className="block px-3 py-2 rounded-lg text-base font-medium text-gray-700 hover:bg-gray-50"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  Profile
+                </Link>
+              )}
+            </div>
+          </div>
+        )}
       </nav>
-      <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+      <main>
         {children}
       </main>
     </div>
   );
 }
-
