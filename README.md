@@ -75,7 +75,7 @@ src/
 - Review bids from providers
 - Accept bids and chat with providers
 
-### For Service Providers
+### For Services Providers
 - Complete provider profile with verification
 - Browse open jobs
 - Submit bids on jobs
