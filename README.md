@@ -86,7 +86,3 @@ src/
 - Approve/reject provider profiles
 - Manage payments
 - View platform statistics
-
-## License
-
-MIT
