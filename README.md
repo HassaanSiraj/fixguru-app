@@ -1,6 +1,6 @@
 # FixGuru App
 
-React frontend for FixGuru - A professional services marketplace for Pakistan.
+React frontend for FixGuru - A professional services marketplace for Pakistan (Asia).
 
 ## Features
 
